@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Printer Agent",
+      "type": "shell",
+      "command": "node agent/printer_agent.js",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Cloud (Port 3000)",
+      "type": "shell",
+      "command": "node cloud/index.js",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Both",
+      "dependsOn": ["Run Printer Agent", "Run Cloud (Port 3000)"],
+      "dependsOrder": "parallel"
+    }
+  ]
+}

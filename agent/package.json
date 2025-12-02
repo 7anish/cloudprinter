@@ -1,0 +1,23 @@
+{
+  "name": "printer-agent-js",
+  "version": "0.1.0",
+  "description": "Cloud Printer Agent (Node.js) - connects to a Socket.IO server to get print jobs, download PDFs and send them to the system printer",
+  "main": "printer_agent.js",
+  "scripts": {
+    "start": "node printer_agent.js"
+  },
+  "keywords": [
+    "printer",
+    "socket.io",
+    "agent",
+    "cloud"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "pdf-to-printer": "^5.6.1",
+    "socket.io-client": "^4.7.2"
+  }
+}

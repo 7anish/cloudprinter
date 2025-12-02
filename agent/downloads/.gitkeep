@@ -1,0 +1,2 @@
+# This file ensures the downloads directory is tracked by git
+# The directory is needed for storing downloaded PDF files before printing

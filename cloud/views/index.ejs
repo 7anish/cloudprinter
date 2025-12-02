@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Print Manager | Enterprise Printing Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #475569;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray: #94a3b8;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 0;
+            display: none;
+        }
+
+        .logo-section {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 2rem;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title p {
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1.25rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.success {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .stat-icon.primary {
+            background: #dbeafe;
+            color: var(--primary);
+        }
+
+        .stat-info h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Main Content Layout */
+        .content-layout {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .upload-section {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            background: #f8fafc;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--primary);
+            background: #dbeafe;
+        }
+
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Form Styles */
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
+            font-size: 0.875rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--card-bg);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .selected-file {
+            background: #f0f9ff;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .selected-file.show {
+            display: flex;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .file-meta {
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Jobs Section */
+        .jobs-section {
+            flex: 0 0 400px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .jobs-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .job-card {
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            transition: all 0.2s;
+        }
+
+        .job-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .job-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .job-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .job-status {
+            padding: 0.20rem 0.50rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .status-processing {
+            background: #dbeafe;
+            color: var(--primary);
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: var(--error);
+        }
+
+        .job-details {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+
+        .job-detail {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .no-jobs {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .no-jobs i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--error);
+        }
+
+        .notification-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: none;
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 1rem 0;
+            }
+            
+            .nav-item {
+                flex: 0 0 auto;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .nav-item.active,
+            .nav-item:hover {
+                border-left: none;
+                border-bottom-color: var(--primary);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .content-layout {
+                flex-direction: column;
+            }
+            
+            .jobs-section {
+                flex: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .content-layout{
+                padding: 0 ;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo-section">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <span>CloudPrint Pro</span>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Upload & Print</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Print History</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-print"></i>
+                    <span>Printers</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Team</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>© 2024 CloudPrint Pro</p>
+                <p>v3.2.1 • Enterprise Edition</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">
+                    <h1>Cloud Print Manager</h1>
+                    <p>Upload documents and manage print jobs across your organization</p>
+                </div>
+                <!-- <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <div>
+                        <div style="font-weight: 600;">John Doe</div>
+                        <div style="font-size: 0.875rem; color: var(--secondary);">Administrator</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div> -->
+            </div>
+
+            <!-- Stats Cards -->
+            <!-- <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalJobs">1,247</h3>
+                        <p>Total Print Jobs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="activeJobs">8</h3>
+                        <p>Active Jobs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="successRate">99.2%</h3>
+                        <p>Success Rate</p>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Content Layout -->
+            <div class="content-layout">
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <div class="section-title">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Document</span>
+                    </div>
+
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <!-- Upload Area -->
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">Click to upload or drag and drop</div>
+                            <div class="upload-hint">PDF files up to 10MB</div>
+                            <input type="file" id="pdfFile" name="pdf" accept=".pdf" class="file-input">
+                        </div>
+
+                        <!-- Selected File -->
+                        <div class="selected-file" id="selectedFile">
+                            <i class="fas fa-file-pdf" style="color: var(--primary); font-size: 1.5rem;"></i>
+                            <div class="file-info">
+                                <div class="file-name" id="fileName"></div>
+                                <div class="file-meta">
+                                    <span id="fileSize"></span>
+                                    • <span id="fileDate"></span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn" id="removeFile" style="background: none; color: var(--error); padding: 0.5rem;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Form Controls -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="printerName">Printer</label>
+                                <select id="printerName" name="printerName" class="form-control" required>
+                                    <option value="">Select a printer</option>
+                                    <option value="Test-Printer">Test Printer</option>
+                                    <option value="printer-01">Office Printer 01</option>
+                                    <option value="printer-02">Office Printer 02</option>
+                                    <option value="printer-03">Color Printer</option>
+                                    <option value="printer-04">Accounting Printer</option>
+                                    <option value="printer-05">Reception Printer</option>
+                                </select>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label for="copies">Copies</label>
+                                <select id="copies" name="copies" class="form-control">
+                                    <option value="1">1 copy</option>
+                                    <option value="2">2 copies</option>
+                                    <option value="3">3 copies</option>
+                                    <option value="5">5 copies</option>
+                                    <option value="10">10 copies</option>
+                                </select>
+                            </div> -->
+                            <div class="form-group">
+                                <label for="priority">Priority</label>
+                                <select id="priority" name="priority" class="form-control">
+                                    <option value="normal">Normal</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-row">
+                            <div class="form-group">
+                                <label for="pages">Pages</label>
+                                <input type="text" id="pages" name="pages" class="form-control" placeholder="e.g., 1-5 or 1,3,5-10">
+                            </div>
+                            
+                        </div> -->
+
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Send to Print
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Recent Jobs Section -->
+                <div class="jobs-section">
+                    <div class="jobs-header">
+                        <div class="section-title">
+                            <i class="fas fa-history"></i>
+                            <span>Recent Jobs</span>
+                        </div>
+                        <button class="btn" id="refreshBtn" style="background: none; color: var(--primary); padding: 0.5rem 0.75rem;">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+
+                    <div class="jobs-list" id="jobsList">
+                        <!-- Jobs will be populated here -->
+                    </div>
+
+                    <div class="no-jobs" id="noJobs">
+                        <i class="fas fa-print"></i>
+                        <p>No recent print jobs</p>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Upload a document to get started</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon" id="notificationIcon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <div>
+            <div id="notificationTitle" style="font-weight: 600; margin-bottom: 0.25rem;">Notification</div>
+            <div id="notificationMessage" style="font-size: 0.875rem; color: var(--secondary);"></div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('pdfFile');
+        const selectedFile = document.getElementById('selectedFile');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileDate = document.getElementById('fileDate');
+        const removeFileBtn = document.getElementById('removeFile');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const jobsList = document.getElementById('jobsList');
+        const noJobs = document.getElementById('noJobs');
+        const notification = document.getElementById('notification');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const notificationIcon = document.getElementById('notificationIcon');
+
+        // Socket.IO connection
+        const socket = io();
+
+        // Upload area click
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        // Remove selected file
+        removeFileBtn.addEventListener('click', () => {
+            fileInput.value = '';
+            selectedFile.classList.remove('show');
+            showNotification('File removed', 'File selection cleared', 'info');
+        });
+
+        // Handle file selection
+        function handleFileSelect(file) {
+            if (file.type !== 'application/pdf') {
+                showNotification('Invalid file type', 'Please select a PDF file', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification('File too large', 'Maximum file size is 10MB', 'error');
+                return;
+            }
+
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileDate.textContent = new Date(file.lastModified).toLocaleDateString();
+            selectedFile.classList.add('show');
+            
+            showNotification('File selected', `${file.name} ready for printing`, 'success');
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFileSelect(e.dataTransfer.files[0]);
+                fileInput.files = e.dataTransfer.files;
+            }
+        });
+
+        // Form submission
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!fileInput.files.length) {
+                showNotification('No file selected', 'Please select a PDF file to print', 'error');
+                return;
+            }
+
+            const printerName = document.getElementById('printerName').value;
+            if (!printerName) {
+                showNotification('Printer required', 'Please select a printer', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                const formData = new FormData(uploadForm);
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification(
+                        'Print job submitted',
+                        `Document sent to ${printerName}<br>Job ID: ${data.jobId}`,
+                        'success'
+                    );
+                    
+                    uploadForm.reset();
+                    selectedFile.classList.remove('show');
+                    loadJobs();
+                    updateStats();
+                    
+                    // Simulate new job appearing in list
+                    setTimeout(() => {
+                        addSampleJob(data.jobId, fileInput.files[0].name, printerName);
+                    }, 1000);
+                } else {
+                    showNotification('Print failed', data.error || 'Unknown error occurred', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error', 'Please check your connection and try again', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send to Print';
+            }
+        });
+
+        // Show notification
+        function showNotification(title, message, type) {
+            notificationTitle.textContent = title;
+            notificationMessage.innerHTML = message;
+            
+            notification.className = 'notification';
+            notification.classList.add(type);
+            
+            // Set icon based on type
+            const icon = notificationIcon.querySelector('i');
+            icon.className = type === 'success' ? 'fas fa-check-circle' :
+                            type === 'error' ? 'fas fa-exclamation-circle' :
+                            'fas fa-info-circle';
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Load print jobs
+        async function loadJobs() {
+            try {
+                const response = await fetch('/api/jobs');
+                const jobs = await response.json();
+
+                if (jobs.length === 0) {
+                    jobsList.innerHTML = '';
+                    noJobs.style.display = 'flex';
+                    return;
+                }
+
+                noJobs.style.display = 'none';
+                jobsList.innerHTML = jobs.map(job => createJobCard(job)).join('');
+            } catch (error) {
+                console.error('Failed to load jobs:', error);
+            }
+        }
+
+        // Create job card HTML
+        function createJobCard(job) {
+            const statusClass = {
+                'completed': 'status-success',
+                'pending': 'status-pending',
+                'processing': 'status-processing',
+                'failed': 'status-error'
+            }[job.status] || 'status-pending';
+
+            const statusText = {
+                'completed': 'Completed',
+                'pending': 'Pending',
+                'processing': 'Printing',
+                'failed': 'Failed'
+            }[job.status] || 'Pending';
+
+            const timeAgo = formatTimeAgo(job.uploadedAt);
+
+            return `
+                <div class="job-card">
+                    <div class="job-header">
+                        <div>
+                            <div class="job-title">${job.originalName}</div>
+                            <div class="job-time">${timeAgo}</div>
+                        </div>
+
+                    </div>
+                    <div class="job-details">
+                        <span class="job-detail">
+                            <i class="fas fa-print" style="color: var(--gray);"></i>
+                            ${job.printerName}
+                        </span>
+                            <span class="job-status ${statusClass}">${statusText}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add sample job (for demo)
+        function addSampleJob(jobId, fileName, printerName) {
+            const job = {
+                jobId,
+                originalName: fileName,
+                printerName,
+                status: 'processing',
+                uploadedAt: new Date().toISOString(),
+                copies: document.getElementById('copies').value || 1
+            };
+
+            const jobCard = createJobCard(job);
+            
+            if (noJobs.style.display !== 'none') {
+                jobsList.innerHTML = jobCard;
+                noJobs.style.display = 'none';
+            } else {
+                jobsList.insertAdjacentHTML('afterbegin', jobCard);
+            }
+
+            // Simulate status changes
+            setTimeout(() => {
+                updateJobStatus(jobId, 'completed');
+            }, 3000);
+        }
+
+        // Update job status
+        function updateJobStatus(jobId, newStatus) {
+            const jobCards = jobsList.querySelectorAll('.job-card');
+            jobCards.forEach(card => {
+                const title = card.querySelector('.job-title').textContent;
+                if (title.includes(jobId) || jobId.includes('sample')) {
+                    const statusEl = card.querySelector('.job-status');
+                    statusEl.className = `job-status status-${newStatus}`;
+                    statusEl.textContent = newStatus === 'completed' ? 'Completed' :
+                                          newStatus === 'failed' ? 'Failed' :
+                                          newStatus === 'processing' ? 'Printing' : 'Pending';
+                }
+            });
+        }
+
+        // Format time ago
+        function formatTimeAgo(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Update statistics
+        function updateStats() {
+            // Simulate API call
+            setTimeout(() => {
+                const total = parseInt(totalJobs.textContent.replace(',', ''));
+                const active = parseInt(activeJobs.textContent);
+                
+                totalJobs.textContent = (total + 1).toLocaleString();
+                activeJobs.textContent = Math.min(active + 1, 10);
+                
+                // Update success rate (slight random variation for demo)
+                const currentRate = parseFloat(successRate.textContent);
+                const newRate = Math.min(99.8, currentRate + (Math.random() - 0.5) * 0.2);
+                successRate.textContent = newRate.toFixed(1) + '%';
+            }, 500);
+        }
+
+        // Refresh button
+        refreshBtn.addEventListener('click', () => {
+            loadJobs();
+            updateStats();
+            showNotification('Refreshed', 'Print jobs and statistics updated', 'success');
+        });
+
+        // Socket.IO listeners
+        socket.on('new-print-job', (data) => {
+            console.log('New print job:', data);
+            loadJobs();
+            updateStats();
+        });
+
+        socket.on('print-job-updated', (data) => {
+            console.log('Print job updated:', data);
+            updateJobStatus(data.jobId, data.status);
+            updateStats();
+        });
+
+        // Initial load
+        loadJobs();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadJobs, 30000);
+
+        // Initialize with sample data for demo
+        setTimeout(() => {
+            if (jobsList.children.length === 0) {
+                const sampleJobs = [
+                    {
+                        jobId: 'JOB-001',
+                        originalName: 'Quarterly_Report.pdf',
+                        printerName: 'Office Printer 01',
+                        status: 'completed',
+                        uploadedAt: new Date(Date.now() - 3600000).toISOString(),
+                        copies: 2
+                    },
+                    {
+                        jobId: 'JOB-002',
+                        originalName: 'Client_Presentation.pdf',
+                        printerName: 'Color Printer',
+                        status: 'processing',
+                        uploadedAt: new Date(Date.now() - 1800000).toISOString(),
+                        copies: 1
+                    }
+                ];
+
+                sampleJobs.forEach(job => {
+                    jobsList.innerHTML += createJobCard(job);
+                });
+
+                if (sampleJobs.length > 0) {
+                    noJobs.style.display = 'none';
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
