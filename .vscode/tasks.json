@@ -12,6 +12,11 @@
       "label": "Run Cloud (Port 3000)",
       "type": "shell",
       "command": "node cloud/index.js",
+      "options": {
+        "env": {
+          "PORT": "3000"
+        }
+      },
       "group": "build",
       "problemMatcher": []
     },

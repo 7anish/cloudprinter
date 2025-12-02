@@ -26,7 +26,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // DB Connection
-const MONGODB_URI =process.env.DB_URL;
+const MONGODB_URI = process.env.DB_URL;
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('✓ MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));

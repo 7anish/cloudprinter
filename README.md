@@ -2,6 +2,8 @@
 
 A cloud-based printing solution that allows users to upload PDF files through a web interface and print them on remote networked printers. The system consists of a Node.js backend server and Node.js-based printer agents that can run on any computer with a printer.
 
+![Cloud Printer System](./public/image.png)
+
 ## 🚀 Features
 
 - **Web-based PDF Upload**: Upload PDF files through a simple web interface
@@ -12,6 +14,7 @@ A cloud-based printing solution that allows users to upload PDF files through a 
 - **Automatic Printing**: PDFs are automatically downloaded and printed on target printers
 
 ## 📋 Prerequisites
+
 
 ### For Cloud Server
 - Node.js 18.x or higher
@@ -313,7 +316,7 @@ This project is licensed under the MIT License.
 ## 👨‍💻 Author
 
 **7anish**
-- GitHub: [@7anish](https://github.com/7anish)
+- GitHub: [@7anish](https://github.com/7anish) , [Yamansaini0405](https://github.com/Yamansaini0405)
 
 ## 🙏 Acknowledgments
 
